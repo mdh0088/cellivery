@@ -55,14 +55,6 @@ logging:
 
 #--- 으로 나눔! (주석할 필요없음!!!!!!!)
 
----
-#영재
-spring:
-   config.activate.on-profile: local #이걸 위에 입력하기만 하면 끗
-   datasource:
-      url: jdbc:mysql://52.78.223.68:3306/cellivery?serverTimezone=UTC&characterEncoding=UTF-8
-      username: root
-      password: casanova1!@
       
 ---
 #서버
