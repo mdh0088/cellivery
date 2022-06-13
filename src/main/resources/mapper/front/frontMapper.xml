@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="frontMapper">
+	<select id="getPopupList" parameterType="hashmap" resultType="hashmap">
+		select
+			*
+		from tbl_main_popup
+	</select>
+	
+	<select id="getPrTargetListCount" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			count(*) as cnt
+		FROM 
+		(
+			SELECT
+				aa.idx,
+				aa.cate_idx,
+				aa.pr_type,
+				aa.title,
+				aa.cont,
+				aa.use_yn,
+				aa.up_show_yn,
+				aa.create_date,
+				cc.NAME AS manager,
+				bb.title AS cate_title
+			FROM tbl_pr_${tbl} aa, tbl_pr_category bb, tbl_user cc WHERE
+				aa.cate_idx = bb.idx
+				AND aa.create_idx = cc.idx
+				AND aa.up_show_yn='Y'
+				AND aa.pr_type='${tbl}'
+				and aa.use_yn='Y'
+				
+			UNION ALL
+			
+			SELECT
+				aa.idx,
+				aa.cate_idx,
+				aa.pr_type,
+				aa.title,
+				aa.cont,
+				aa.use_yn,
+				'N' as up_show_yn,
+				aa.create_date,
+				cc.NAME AS manager,
+				bb.title AS cate_title
+			FROM tbl_pr_${tbl} aa, tbl_pr_category bb, tbl_user cc WHERE
+				aa.cate_idx = bb.idx
+				AND aa.create_idx = cc.idx
+				AND aa.pr_type='${tbl}'
+				and aa.use_yn='Y'
+		) t1 where 1=1
+			<if test="!search_name.equals('')">
+				and 
+				(	title like '%${search_name}%'
+					or cont like '%${search_name}%'
+				)
+			</if>
+			<if test="!cate.equals('')">
+				and cate_idx = '${cate}'
+			</if>
+			
+			
+	</select>
+
+	<select id="getPrTargetList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			*
+		FROM 
+		(
+			SELECT
+				aa.idx,
+				aa.cate_idx,
+				aa.pr_type,
+				aa.title,
+				aa.cont,
+				aa.use_yn,
+				aa.up_show_yn,
+				aa.create_date,
+				cc.NAME AS manager,
+				bb.title AS cate_title
+			FROM tbl_pr_${tbl} aa, tbl_pr_category bb, tbl_user cc WHERE
+				aa.cate_idx = bb.idx
+				AND aa.create_idx = cc.idx
+				AND aa.up_show_yn='Y'
+				AND aa.pr_type='${tbl}'
+				and aa.use_yn='Y'
+				
+			UNION ALL
+			
+			SELECT
+				aa.idx,
+				aa.cate_idx,
+				aa.pr_type,
+				aa.title,
+				aa.cont,
+				aa.use_yn,
+				'N' as up_show_yn,
+				aa.create_date,
+				cc.NAME AS manager,
+				bb.title AS cate_title
+			FROM tbl_pr_${tbl} aa, tbl_pr_category bb, tbl_user cc WHERE
+				aa.cate_idx = bb.idx
+				AND aa.create_idx = cc.idx
+				AND aa.pr_type='${tbl}'
+				and aa.use_yn='Y'
+				
+				order BY up_show_yn DESC, idx desc
+		) t1 where 1=1
+			<if test="!search_name.equals('')">
+				and 
+				(	title like '%${search_name}%'
+					or cont like '%${search_name}%'
+				)
+			</if>
+			<if test="!cate.equals('')">
+				and cate_idx = '${cate}'
+			</if>
+			order by up_show_yn desc, create_date desc
+			
+			limit ${s_rownum}, ${e_rownum}
+	
+	</select>
+	
+	<select id="getPrMediaListCount" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			count(*) as cnt
+		FROM 
+		(
+			SELECT
+				aa.idx,
+				aa.cate_idx,
+				aa.pr_type,
+				aa.title,
+				aa.cont,
+				aa.use_yn,
+				aa.up_show_yn,
+				aa.create_date,
+				cc.NAME AS manager,
+				aa.thumb,
+				bb.title AS cate_title
+			FROM tbl_pr_media aa, tbl_pr_category bb, tbl_user cc WHERE
+				aa.cate_idx = bb.idx
+				AND aa.create_idx = cc.idx
+				AND aa.pr_type='media'
+				and aa.use_yn='Y'
+		) t1 where 1=1
+		
+			<if test="!search_name.equals('')">
+				and 
+				(	title like '%${search_name}%'
+					or cont like '%${search_name}%'
+				)
+			</if>
+			<if test="!cate.equals('')">
+				and cate_idx = '${cate}'
+			</if>
+			order by create_date desc
+			
+	</select>
+
+	<select id="getPrMediaList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			*
+		FROM 
+		(
+			SELECT
+				aa.idx,
+				aa.cate_idx,
+				aa.pr_type,
+				aa.title,
+				aa.cont,
+				aa.use_yn,
+				aa.up_show_yn,
+				aa.create_date,
+				aa.thumb,
+				cc.NAME AS manager,
+				bb.title AS cate_title
+			FROM tbl_pr_media aa, tbl_pr_category bb, tbl_user cc WHERE
+				aa.cate_idx = bb.idx
+				AND aa.create_idx = cc.idx
+				AND aa.pr_type='media'
+				and aa.use_yn='Y'
+				
+		) t1 where 1=1
+			<if test="!search_name.equals('')">
+				and 
+				(	title like '%${search_name}%'
+					or cont like '%${search_name}%'
+				)
+			</if>
+			<if test="!cate.equals('')">
+				and cate_idx = '${cate}'
+			</if>
+			order by create_date desc
+			
+			limit ${s_rownum}, ${e_rownum}
+	
+	</select>
+	
+	
+	<select id="getPrSNSListCount" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			count(*) as cnt
+		FROM 
+		(
+			SELECT
+				aa.idx,
+				aa.cate_idx,
+				aa.pr_type,
+				aa.title,
+				aa.use_yn,
+				aa.create_date,
+				aa.thumb,
+				aa.url,
+				cc.NAME AS manager,
+				bb.title AS cate_title
+			FROM tbl_pr_${tbl} aa, tbl_pr_category bb, tbl_user cc WHERE
+				aa.cate_idx = bb.idx
+				AND aa.create_idx = cc.idx
+				AND aa.pr_type='${tbl}'
+				and aa.use_yn='Y'
+		) t1 where 1=1
+		
+			<if test="!search_name.equals('')">
+				and 
+				(	title like '%${search_name}%'
+					or cont like '%${search_name}%'
+				)
+			</if>
+			<if test="!cate.equals('')">
+				and cate_idx = '${cate}'
+			</if>
+			
+			
+	</select>
+
+	<select id="getPrSNSList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			*
+		FROM 
+		(
+			SELECT
+				aa.idx,
+				aa.cate_idx,
+				aa.pr_type,
+				aa.title,
+				aa.use_yn,
+				aa.create_date,
+				aa.thumb,
+				aa.url,
+				cc.NAME AS manager,
+				bb.title AS cate_title
+			FROM tbl_pr_${tbl} aa, tbl_pr_category bb, tbl_user cc WHERE
+				aa.cate_idx = bb.idx
+				AND aa.create_idx = cc.idx
+				AND aa.pr_type='${tbl}'
+				and aa.use_yn='Y'
+				
+		) t1 where 1=1
+			<if test="!search_name.equals('')">
+				and 
+				(	title like '%${search_name}%'
+					or cont like '%${search_name}%'
+				)
+			</if>
+			<if test="!cate.equals('')">
+				and cate_idx = '${cate}'
+			</if>
+			order by create_date desc,idx desc
+			
+			limit ${s_rownum}, ${e_rownum}
+	
+	</select>
+	
+	<select id="getHistoryList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			*
+		FROM tbl_history
+			ORDER BY title_year desc
+	</select>
+	
+	<select id="getHistorySubList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			*
+		FROM tbl_history_detail
+			ORDER BY history_ymd desc,idx
+	</select>
+	
+	<select id="getPrDetailInfo" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			(SELECT concat(title,'|',create_date) FROM tbl_pr_${tbl} WHERE idx=t1.before_idx) AS before_nm,
+			(SELECT concat(title,'|',create_date) FROM tbl_pr_${tbl} WHERE idx=t1.after_idx) AS after_nm,
+			t1.*
+		FROM 
+		(
+			SELECT
+				case 
+				when aa.idx = ( SELECT MIN(idx) FROM tbl_pr_${tbl} ) then ( SELECT max(idx) FROM tbl_pr_${tbl} )
+				ELSE (SELECT idx FROM tbl_pr_${tbl} WHERE idx <![CDATA[<]]> aa.idx ORDER BY idx desc LIMIT 1)
+				END AS before_idx, 
+			
+				case
+				when aa.idx = ( SELECT max(idx) FROM tbl_pr_${tbl} ) then ( SELECT MIN(idx) FROM tbl_pr_${tbl} )
+				ELSE (SELECT idx FROM tbl_pr_${tbl} WHERE idx <![CDATA[>]]> aa.idx LIMIT 1)
+				END AS after_idx, 
+			
+				aa.* , 
+				bb.title AS cate_title
+			
+			FROM tbl_pr_${tbl} aa,tbl_pr_category bb WHERE 
+				aa.idx = '${idx}'
+				AND aa.cate_idx = bb.idx
+		) t1
+	</select>
+	
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hisMapper">
+	<select id="getHistoryListCount" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			count(*) as cnt
+		FROM tbl_history aa WHERE 
+			1=1
+			<if test="!search_name.equals('')">
+				and (SELECT GROUP_CONCAT(cont) FROM tbl_history_detail WHERE history_idx =aa.idx) like '%${search_name}%'
+			</if>
+	
+			<if test="!start_ymd.equals('')">
+				and aa.create_date <![CDATA[>=]]> '${start_ymd}'
+			</if>
+			<if test="!end_ymd.equals('')">
+				and aa.create_date <![CDATA[<=]]> '${end_ymd}'
+			</if>
+			
+			<if test="!use_yn.equals('')">
+				and aa.use_yn ='${use_yn}'
+			</if>
+	</select>
+
+	<select id="getHistoryList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			aa.*
+		FROM tbl_history aa WHERE 
+			1=1
+			<if test="!search_name.equals('')">
+				and (SELECT GROUP_CONCAT(cont) FROM tbl_history_detail WHERE history_idx =aa.idx) like '%${search_name}%'
+			</if>
+	
+			<if test="!start_ymd.equals('')">
+				and aa.create_date <![CDATA[>=]]> '${start_ymd}'
+			</if>
+			<if test="!end_ymd.equals('')">
+				and aa.create_date <![CDATA[<=]]> '${end_ymd}'
+			</if>
+			
+			<if test="!use_yn.equals('')">
+				and aa.use_yn ='${use_yn}'
+			</if>
+			
+			order by title_year desc
+			
+			limit ${s_rownum}, ${e_rownum}
+	</select>
+	
+	<delete id="delTarget" parameterType="hashmap">
+		DELETE FROM tbl_history WHERE idx='${idx}'
+	</delete>
+	
+	
+	<insert id="duplTarget" parameterType="hashmap">		
+		<if test="tbl != 'youtube'.toString() and tbl != 'insta'.toString()">
+	        INSERT INTO tbl_history
+			(
+				title_year,use_yn,history_ymd,history_cont,effect_yn,logo_yn,create_date,submit_date
+			)
+			
+			SELECT
+				title_year,use_yn,history_ymd,history_cont,effect_yn,logo_yn,create_date,NOW()+0
+			FROM tbl_history WHERE
+				idx='${idx}'
+		</if>
+		
+		<if test="tbl eq 'youtube'.toString() or tbl eq 'insta'.toString()">
+			INSERT INTO tbl_pr_${tbl}
+			(
+				cate_idx,title,url,thumb,thumb_ori,use_yn,create_date,create_idx,submit_date
+			)
+			
+			SELECT
+				cate_idx,title,url,thumb,thumb_ori,use_yn,create_date,'${myidx}' as create_idx,NOW()+0
+			FROM tbl_pr_${tbl} WHERE
+				idx='${idx}'
+		</if>
+	</insert>
+	
+	<select id="getHistoryMax_idx" parameterType="hashmap" resultType="hashmap">
+		SELECT IFNULL(MAX(idx)+1,1) AS idx FROM tbl_history
+	</select>
+	
+	<select id="getHistTargetInfo" parameterType="hashmap" resultType="hashmap">
+		select
+			*
+		from tbl_history where
+			idx='${idx}'
+	</select>
+	
+	<select id="getHistTargetInfoBy_year" parameterType="hashmap" resultType="hashmap">
+		select
+			*
+		from tbl_history where
+			title_year='${title_year}'
+	</select>
+	
+	<insert id="insHistory" parameterType="hashmap">
+		
+        insert into tbl_history
+        	set
+        idx 		='${idx}',
+ 		title_year  ='${title_year}',
+ 		use_yn		='${use_yn}',
+ 		create_date	='${create_date}',
+ 		submit_date	=now()+0
+	</insert>
+	
+	
+	<insert id="insHistoryTarget" parameterType="hashmap">		
+		insert into tbl_history_detail
+			set
+		history_idx = '${max_idx}',
+		history_ymd ='${history_ymd}',
+		cont ='${history_cont}',
+		effect_yn = '${effect_yn}',
+		logo_yn = '${logo_yn}',
+		submit_date =now()+0
+	</insert>
+	
+	<select id="getHistoryTargetList" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			*
+		FROM tbl_history_detail where
+			history_idx = '${idx}'
+			ORDER BY history_ymd desc
+	</select>
+	
+	<delete id="delHistoryTarget" parameterType="hashmap">
+		DELETE FROM tbl_history_detail WHERE history_idx='${idx}'
+	</delete>
+	
+	<update id="uptHistory" parameterType="hashmap">
+		UPDATE  tbl_history set
+			create_date ='${create_date}',
+			title_year ='${title_year}',
+			use_yn='${use_yn}'
+		where 
+			idx ='${idx}'
+	</update>
+</mapper>

@@ -1,0 +1,10 @@
+@media screen and (max-width: 1500px) {
+	
+	/* PR 리스트 서치박스 */
+	.search_btn input[type='button'] {
+		top: 60%;
+	}
+	
+	/* PR 리스트 테이블 */
+		
+}

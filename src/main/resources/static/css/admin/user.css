@@ -1,0 +1,101 @@
+.user_login {
+    background: #f8f8f8;
+    width: 100%;
+    height: calc(100vh - 39px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user_login .logo_img {
+    text-align: center;
+    margin-bottom: 47px;
+}
+
+.user_login_form {
+    width: 822px;
+    height: 594px;
+    background: #fff;
+    border-radius: 26px;
+    padding: 107px 214px;
+}
+
+.user_login_form input {
+    width: 100%;
+    height: 60px;
+    line-height: 58px;
+    border-radius: 43px;
+    border: solid 1px #ccc;
+    text-indent: 20px;
+}
+
+.user_login_form input::placeholder {
+    font-size: 18px;
+    color: #6a6a6a;
+}
+
+.user_login_form input.user_id {
+    margin-bottom: 20px;
+}
+
+.user_login_form .login_btn {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 43px;
+    background: #1d4286;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 45px;
+    transition: none;
+    display: block;
+    text-align: center;
+    font-size: 18px;
+}
+
+
+/* 마이페이지 */
+.user_infoBox {
+	padding: 0 63px;
+	margin-bottom: 50px;
+}
+.user_infoBox .search_inner > div {
+	display: block;
+	padding: 20px 32px;
+}
+.user_infoBox .search_inner > div + div {
+	border-top: 1px solid #f8f8f8;
+}
+.user_infoBox div > * {
+	display: inline-block;
+}
+.user_infoBox input {
+	width: 257px;
+    height: 38px;
+    line-height: 38px;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    padding: 0 20px;
+    text-overflow: ellipsis;
+}
+.user_infoBox span {
+	font-size: 10px;
+	color: #9ebee4;
+	margin-left: 10px;
+	vertical-align: bottom;
+}
+.pw2 {
+	margin-left: 80px;
+}
+.user_inner .btn_box {
+	display: block;
+	margin-left: 0;
+	text-align: center;
+}
+.mypage .user_id_box input {
+	background: #9ebee4;
+	color: #000;
+	border: none;
+}

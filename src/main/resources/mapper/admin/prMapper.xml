@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="prMapper">
+	<select id="getCateList" parameterType="hashmap" resultType="hashmap">
+		select
+			*
+		from tbl_pr_category
+		order by order_no
+	</select>
+	
+	<insert id="save_pr_cate" parameterType="hashmap">
+		insert into tbl_pr_category
+			set
+		title = '${cate_title}',
+		create_date=date_format(NOW()+0,'%Y-%m-%d'),
+		order_no = ( SELECT t1.* FROM ( SELECT IFNULL(MAX(order_no)+1,1) FROM tbl_pr_category)t1),
+		submit_date = now()+0
+	</insert>
+	
+	<delete id="del_pr_cate" parameterType="hashmap">
+		delete from tbl_pr_category where idx = '${idx}'
+	</delete>
+	
+	<select id="getPrTargetListCount" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			count(*) as cnt
+		FROM tbl_pr_${tbl} aa, tbl_pr_category bb WHERE 
+			aa.cate_idx = bb.idx
+			<if test="!search_name.equals('')">
+				and 
+				(	aa.title like '%${search_name}%'
+					or aa.cont like '%${search_name}%'
+				)
+			</if>
+			
+			<if test="!cate.equals('')">
+				and aa.cate_idx = '${cate}'
+			</if>
+			<if test="!start_ymd.equals('')">
+				and aa.create_date <![CDATA[>=]]> '${start_ymd}'
+			</if>
+			<if test="!end_ymd.equals('')">
+				and aa.create_date <![CDATA[<=]]> '${end_ymd}'
+			</if>
+			<if test="!use_yn.equals('')">
+				and aa.use_yn ='${use_yn}'
+			</if>
+			
+			
+	</select>
+
+	<select id="getPrTargetList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			bb.title as cate_title,
+			aa.*
+		FROM tbl_pr_${tbl} aa, tbl_pr_category bb WHERE 
+			aa.cate_idx = bb.idx
+			<if test="!search_name.equals('')">
+				and 
+				(	aa.title like '%${search_name}%'
+					or aa.cont like '%${search_name}%'
+				)
+			</if>
+			<if test="!cate.equals('')">
+				and aa.cate_idx = '${cate}'
+			</if>
+			<if test="!start_ymd.equals('')">
+				and aa.create_date <![CDATA[>=]]> '${start_ymd}'
+			</if>
+			<if test="!end_ymd.equals('')">
+				and aa.create_date <![CDATA[<=]]> '${end_ymd}'
+			</if>
+			
+			<if test="!use_yn.equals('')">
+				and aa.use_yn ='${use_yn}'
+			</if>
+			order by create_date desc,idx desc
+			
+			limit ${s_rownum}, ${e_rownum}
+	</select>
+	
+	<delete id="delTarget" parameterType="hashmap">
+		DELETE FROM ${tbl} WHERE idx='${idx}'
+	</delete>
+	
+	
+	<insert id="duplTarget" parameterType="hashmap">		
+		<if test="tbl != 'youtube'.toString() and tbl != 'insta'.toString()">
+	        INSERT INTO tbl_pr_${tbl}
+			(
+				cate_idx,title,cont,pr_type,
+				<if test="tbl eq 'notice'.toString()">
+					FILE,file_ori,
+				</if>
+				thumb,thumb_ori,use_yn,up_show_yn,create_date,create_idx,submit_date
+			)
+			
+			SELECT
+				cate_idx,title,cont,pt_type,
+				<if test="tbl eq 'notice'.toString()">
+					FILE,file_ori,
+				</if>
+				thumb,thumb_ori,use_yn,up_show_yn,create_date,'${myidx}' as create_idx,NOW()+0
+			FROM tbl_pr_${tbl} WHERE
+				idx='${idx}'
+		</if>
+		
+		<if test="tbl eq 'youtube'.toString() or tbl eq 'insta'.toString()">
+			INSERT INTO tbl_pr_${tbl}
+			(
+				cate_idx,title,url,thumb,thumb_ori,use_yn,create_date,create_idx,submit_date
+			)
+			
+			SELECT
+				cate_idx,title,url,thumb,thumb_ori,use_yn,create_date,'${myidx}' as create_idx,NOW()+0
+			FROM tbl_pr_${tbl} WHERE
+				idx='${idx}'
+		</if>
+	</insert>
+	
+	<select id="getPrTargetInfo" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			aa.*
+		FROM tbl_pr_${tbl} aa WHERE 
+			aa.idx='${idx}'
+	</select>
+	
+	<insert id="insPrTarget" parameterType="hashmap">
+		insert into tbl_pr_${tbl}
+			set
+		cate_idx='${cate_list}',
+		title = '${title}',
+		
+		<if test="tbl eq 'youtube'.toString() or tbl eq 'insta'.toString()">
+			url='${url}',
+		</if>
+		
+		<if test="tbl != 'youtube'.toString() and tbl != 'insta'.toString()">
+			cont='${board_cont}',
+			up_show_yn='${up_show_yn}',
+		</if>
+		
+		<if test="tbl eq 'notice'.toString()">
+			file='${file_nm}',
+			file_ori='${file_ori_nm}',
+		</if>
+		
+		thumb='${thumb_nm}',
+		thumb_ori='${thumb_ori_nm}',
+		use_yn='${use_yn}',
+		create_date='${create_date}',
+		create_idx='${myidx}',
+		submit_date = now()+0
+	</insert>
+	
+	<update id="uptPrTarget" parameterType="hashmap">
+		UPDATE  tbl_pr_${tbl} set
+	 		cate_idx='${cate_list}',
+			title = '${title}',
+			
+			<if test="tbl eq 'youtube'.toString() or tbl eq 'insta'.toString()">
+				url='${url}',
+			</if>
+			
+			<if test="tbl != 'youtube'.toString() and tbl != 'insta'.toString()">
+				cont='${board_cont}',
+				up_show_yn='${up_show_yn}',
+			</if>
+			
+			<if test="tbl eq 'notice'.toString()">
+				file='${file_nm}',
+				file_ori='${file_ori_nm}',
+			</if>
+			
+			thumb='${thumb_nm}',
+			thumb_ori='${thumb_ori_nm}',
+			use_yn='${use_yn}',
+			create_date='${create_date}',
+			create_idx='${myidx}'
+		where 
+			idx ='${idx}'
+	</update>
+	
+	<update id="upt_main_cate" parameterType="hashmap">
+		UPDATE  tbl_pr_category set
+	 		order_no='${order_no}'
+		where 
+			idx ='${idx}'
+	</update>
+</mapper>

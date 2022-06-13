@@ -1,0 +1,228 @@
+input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+.write_cont .btn {
+	width: 100px;
+	height: 38px;
+	line-height: 38px;
+	display: inline-block;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #1d4286;
+    cursor: pointer;
+    text-align: center;
+}
+.filebtn {	
+    margin-left: 5px;
+}
+.write_cont .btn.btn-del {
+	background-color: #6a6a6a;
+}
+.write_cont + .btn_box label {
+	height: 49px;
+	line-height: 49px;
+	-webkit-border-radius: 40px;
+	-moz-border-radius: 40px;
+	border-radius: 40px;
+}
+
+/* form */
+#fncForm.sub {
+   
+}
+
+
+/* write_cont */
+.write_cont {
+	width: 100%;
+    height: auto;
+    box-shadow: 2px 3px 20px 0 rgb(222 222 222 / 16%);
+    background-color: #fff;
+    border-radius: 29px;
+    padding: 0 63px 10px;
+    margin: 36px 0 43px;
+}
+.write_cont > div {
+	padding: 20px 0;
+}
+.write_cont > div + div {
+	border-top: 1px solid #f8f8f8;
+}
+.writebox_tit {
+	display: inline-block;
+    width: 12%;
+    text-indent: 32px;
+    vertical-align: top;
+	line-height: 38px;
+}
+.writebox_cont {
+	display: inline-block;
+	position: relative;
+}
+.writebox_cont .switch_label {
+	vertical-align: middle;
+}
+
+
+.write_date .writebox_tit:nth-of-type(2) {
+	margin-left: 36px;
+	width: 10%;
+}
+
+.write_title input,
+.youtube_url input {
+	line-height: 38px;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+	text-indent: 20px;
+}
+.write_title input#title,
+.youtube_url input#title {
+	width: 545px;	
+}
+.write_title input::placeholder {
+	color: #ccc;
+}
+
+.write_content .cke_chrome {
+	width: 970px;
+}
+
+.write_cont > div.write_file {
+	font-size: 0;
+/* 	padding: 20px 0 0 32px; */
+	padding: 20px 0 0;
+	margin-left: 6px;
+}
+.write_file > div {
+	display: inline-block;
+	width: 50%;
+	padding-left: 26px;
+	margin-bottom: 20px;
+}
+.write_file .writebox_tit {
+	width: auto;
+	text-indent: 0;
+}
+.write_file .writebox_cont {
+	margin-left: 46px;
+}
+.write_file .upload-name,
+.write_thumb .upload-name {
+	width: 230px;
+	height: 38px;
+	line-height: 38px;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+	padding: 0 20px;
+	text-overflow: ellipsis;
+}
+
+.write_thumb {
+	
+}
+.write_thumb .upload-name {
+	width: 257px;
+}
+.write_thumb .upload-name::placeholder {
+	letter-spacing: -0.8px;
+}
+.thumb_desc {
+	color: #ccc;
+	margin-top: 10px;
+}
+
+.write_option .writebox_cont {
+	line-height: 38px;
+}
+
+.write_cont + .btn_box {
+	margin-left: 0;
+	display: block;
+    text-align: center;
+}
+
+/* 연혁 */
+.history_form {
+	
+}
+.title_year {
+	width: 166px;
+    height: 38px;
+    border: solid 1px #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #303030;
+    padding-left: 20px;
+    background: #fff;
+}
+.title_year:invalid {
+	color: red;
+}
+.history_form .writebox_cont {
+	font-size: 0;
+	vertical-align: top;
+}
+.history_form .writebox_cont.switch {
+	vertical-align: 10px;
+}
+.history_form .writebox_cont > * {
+	vertical-align: top;
+}
+.write_title input.target_history_year {
+	width: 109px;
+}
+.write_title input.target_history_year::placeholder {
+	color: #ccc;
+	font-weight: 300;
+}
+.history_form .write_cont .btn {
+	text-indent: 0;	
+}
+.history_form .write_cont .btn  {
+	margin-left: 20px;
+}
+.history_form .del_btn {
+	background-color: #6a6a6a !important;
+}
+.history_form .write_cont .btn + .btn {
+	margin-left: 10px;
+}
+.history_target_cnt + .history_target_cnt {
+	margin-top: 20px;
+}
+.history_cont {
+	font-size: 0;
+	margin-top: 20px;
+}
+.target_history_cont {
+	width: 545px;
+	min-height: 76px;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+	padding: 10px 20px;
+	vertical-align: top;
+}
+.history_check_Box {
+	display: inline-block;
+	padding-left: 30px;
+	vertical-align: top;
+}
+.history_check_Box label {
+	display: block;
+	line-height: 38px;
+}
+.history_check_Box label input {
+	margin-right: 5px;
+}

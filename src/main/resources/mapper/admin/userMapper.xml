@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userMapper">
+	<select id="loginCheck" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			*
+		from tbl_user WHERE
+			id = '${login_id}' 
+			and pw = '${login_pw}'
+	</select>
+	
+	
+	<select id="user_id_chk" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			*
+		from tbl_user WHERE
+			id = '${user_id}' 
+	</select>
+	
+	<insert id="insUser" parameterType="hashmap">
+		insert into tbl_user
+			set
+		id = '${user_id}',
+		pw = '${user_pw}',
+		name = '${user_nm}',
+		email = '${user_email}',
+		phone = '${user_phone}',
+		submit_date = now()+0
+	</insert>
+	<update id="uptUserInfo" parameterType="hashmap">
+		UPDATE tbl_user set
+			id = '${user_id}',
+			pw = '${user_pw}',
+			name = '${user_nm}',
+			email = '${user_email}',
+			phone = '${user_phone}'
+		where 
+			idx ='${idx}'
+	</update>
+	
+	<select id="getUserInfoForEdit" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			*
+		from tbl_user WHERE
+			idx = '${idx}' 
+	</select>
+	
+	<select id="getUserListCount" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			count(*) as cnt
+		FROM tbl_user  
+	</select>
+
+	<select id="getUserList" parameterType="hashmap" resultType="hashmap">
+		SELECT    
+			idx,
+			id,
+			pw,
+			NAME,
+			email,
+			phone,
+			is_manager,
+			DATE_FORMAT(submit_date,'%Y-%m-%d') AS submit_date
+		FROM tbl_user   
+			order by is_manager desc
+			limit ${s_rownum}, ${e_rownum}
+	</select>
+	
+	<update id="update_popup_to_n" parameterType="hashmap">
+		UPDATE tbl_main_popup aa
+			SET use_yn ='N'
+		WHERE end_ymd  <![CDATA[<]]> DATE_FORMAT(NOW(),'%Y-%m-%d') 
+	</update>
+</mapper>
+
+

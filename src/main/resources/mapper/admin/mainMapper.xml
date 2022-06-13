@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mainMapper">
+	<select id="test" parameterType="hashmap" resultType="int">
+		SELECT count(*) from portfolio
+	</select>
+	<select id="getPopUpListCount" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			count(*) as cnt
+		FROM tbl_main_popup aa WHERE 
+			1=1
+			<if test="!search_name.equals('')">
+				and aa.title like '${search_name}'
+			</if>
+	
+			<if test="!start_ymd.equals('')">
+				and aa.create_date <![CDATA[>=]]> '${start_ymd}'
+			</if>
+			<if test="!end_ymd.equals('')">
+				and aa.create_date <![CDATA[<=]]> '${end_ymd}'
+			</if>
+			
+			<if test="!use_yn.equals('')">
+				and aa.use_yn ='${use_yn}'
+			</if>
+	</select>
+
+	<select id="getPopUpList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			aa.*
+		FROM tbl_main_popup aa WHERE 
+			1=1
+			<if test="!search_name.equals('')">
+				and aa.title like '${search_name}'
+			</if>
+	
+			<if test="!start_ymd.equals('')">
+				and aa.create_date <![CDATA[>=]]> '${start_ymd}'
+			</if>
+			<if test="!end_ymd.equals('')">
+				and aa.create_date <![CDATA[<=]]> '${end_ymd}'
+			</if>
+			
+			<if test="!use_yn.equals('')">
+				and aa.use_yn ='${use_yn}'
+			</if>
+			order by aa.create_date desc
+			
+			limit ${s_rownum}, ${e_rownum}
+	</select>
+	
+	
+	<select id="getPopupInfo" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			aa.*
+		FROM tbl_main_popup aa WHERE 
+			aa.idx='${idx}'
+	</select>
+	
+	<insert id="insPopupTarget" parameterType="hashmap">
+		insert into tbl_main_popup
+			set
+		title = '${title}',
+		start_ymd='${start_ymd}',
+		end_ymd='${end_ymd}',
+		cont='${board_cont}',
+		use_yn='${use_yn}',
+		create_date='${create_date}',
+		submit_date = now()+0
+	</insert>
+	
+	<update id="uptPopupTarget" parameterType="hashmap">
+		UPDATE  tbl_main_popup set
+			title = '${title}',
+			start_ymd='${start_ymd}',
+			end_ymd='${end_ymd}',
+			cont='${board_cont}',
+			use_yn='${use_yn}',
+			create_date='${create_date}'
+		where 
+			idx ='${idx}'
+	</update>
+	<select id="getMainPrList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			*
+		FROM 
+		(
+			SELECT
+				cc.title AS cate_title,
+				bb.pr_type,
+				aa.idx,
+				bb.idx AS pr_idx,
+				bb.title,
+				bb.create_date,
+				bb.use_yn,
+				bb.thumb,
+				bb.thumb_ori,
+				aa.order_no
+			FROM tbl_main_pr aa, tbl_pr_notice bb, tbl_pr_category cc WHERE
+				aa.pr_type = bb.pr_type
+				AND aa.pr_idx = bb.idx
+				AND bb.cate_idx = cc.idx
+			
+			UNION all
+			
+			SELECT
+				cc.title AS cate_title,
+				bb.pr_type,
+				aa.idx,
+				bb.idx AS pr_idx,
+				bb.title,
+				bb.create_date,
+				bb.use_yn,
+				bb.thumb,
+				bb.thumb_ori,
+				aa.order_no
+			FROM tbl_main_pr aa, tbl_pr_news bb, tbl_pr_category cc WHERE
+				aa.pr_type = bb.pr_type
+				AND aa.pr_idx = bb.idx
+				AND bb.cate_idx = cc.idx
+				
+			UNION ALL
+			
+			SELECT
+				cc.title AS cate_title,
+				bb.pr_type,
+				aa.idx,
+				bb.idx AS pr_idx,
+				bb.title,
+				bb.create_date,
+				bb.use_yn,
+				bb.thumb,
+				bb.thumb_ori,
+				aa.order_no
+			FROM tbl_main_pr aa, tbl_pr_media bb, tbl_pr_category cc WHERE
+				aa.pr_type = bb.pr_type
+				AND aa.pr_idx = bb.idx
+				AND bb.cate_idx = cc.idx
+		) t1 order by order_no
+
+	</select>
+	
+	<delete id="del_pr_cate" parameterType="hashmap">
+		delete from tbl_main_pr where idx = '${idx}'
+	</delete>
+	
+	
+	
+	<select id="getMainPopPrListCount" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			count(*) as cnt
+		FROM tbl_pr_${pr} aa, tbl_pr_category bb WHERE
+			aa.cate_idx = bb.idx
+	</select>
+
+	<select id="getMainPopPrList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			bb.title AS cate_title,
+			aa.pr_type,
+			aa.idx,
+			aa.title,
+			aa.create_date,
+			aa.use_yn,
+			aa.thumb_ori
+		FROM tbl_pr_${pr} aa, tbl_pr_category bb WHERE
+			aa.cate_idx = bb.idx
+			limit ${s_rownum}, ${e_rownum}
+	</select>
+	
+	<insert id="add_pr_cate" parameterType="hashmap">		
+		insert into tbl_main_pr
+			set
+		pr_type='${pr_type}',
+		pr_idx = '${idx}',
+		submit_date = now()+0
+	</insert>
+	
+	<delete id="delTarget" parameterType="hashmap">
+		DELETE FROM tbl_main_popup WHERE idx='${idx}'
+	</delete>
+	
+	
+	<insert id="duplTarget" parameterType="hashmap">		
+		<if test="tbl != 'youtube'.toString() and tbl != 'insta'.toString()">
+	        INSERT INTO tbl_main_popup
+			(
+				title, start_ymd, end_ymd, cont, use_yn, create_date, submit_date
+			)
+			
+			SELECT
+				title, start_ymd, end_ymd, cont, use_yn, create_date, NOW()+0
+			FROM tbl_main_popup WHERE
+				idx='${idx}'
+		</if>
+		
+		<if test="tbl eq 'youtube'.toString() or tbl eq 'insta'.toString()">
+			INSERT INTO tbl_pr_${tbl}
+			(
+				cate_idx,title,url,thumb,thumb_ori,use_yn,create_date,create_idx,submit_date
+			)
+			
+			SELECT
+				cate_idx,title,url,thumb,thumb_ori,use_yn,create_date,'${myidx}' as create_idx,NOW()+0
+			FROM tbl_pr_${tbl} WHERE
+				idx='${idx}'
+		</if>
+	</insert>
+	
+	<update id="change_use_yn" parameterType="hashmap">
+		UPDATE  tbl_${tbl} set
+			use_yn='${use_yn}'
+		where 
+			idx ='${idx}'
+	</update>
+	
+	<update id="upt_main_cate" parameterType="hashmap">
+		UPDATE  tbl_main_pr set
+	 		order_no='${order_no}'
+		where 
+			idx ='${idx}'
+	</update>
+	
+	
+</mapper>
+
+
